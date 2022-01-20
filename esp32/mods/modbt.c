@@ -1736,6 +1736,23 @@ STATIC mp_obj_t bt_set_advertisement_raw(mp_obj_t self_in, mp_obj_t raw_data) {
 STATIC MP_DEFINE_CONST_FUN_OBJ_2(bt_set_advertisement_raw_obj, bt_set_advertisement_raw);
 
 
+
+STATIC mp_obj_t bt_set_address(mp_obj_t self_in, mp_obj_t raw_data) {
+    mp_buffer_info_t bufinfo;
+    esp_bd_addr_t data  = {0xFF, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF};
+    if (raw_data != mp_const_none) {
+        mp_get_buffer_raise(raw_data, &bufinfo, MP_BUFFER_READ);
+        memcpy(data, (uint8_t *)bufinfo.buf, bufinfo.len);
+    }
+    esp_ble_gap_set_rand_addr(data);
+
+    return mp_const_none;
+}
+STATIC MP_DEFINE_CONST_FUN_OBJ_2(bt_set_address_obj, bt_set_address);
+
+
+
+
 STATIC mp_obj_t bt_set_pin(mp_obj_t self_in, mp_obj_t arg) {
     set_pin(mp_obj_get_int(arg));
     return mp_const_none;
@@ -2189,6 +2206,7 @@ STATIC const mp_map_elem_t bt_locals_dict_table[] = {
     { MP_OBJ_NEW_QSTR(MP_QSTR_set_advertisement_params),(mp_obj_t)&bt_set_advertisement_params_obj },
     { MP_OBJ_NEW_QSTR(MP_QSTR_set_advertisement),       (mp_obj_t)&bt_set_advertisement_obj },
     { MP_OBJ_NEW_QSTR(MP_QSTR_set_advertisement_raw),   (mp_obj_t)&bt_set_advertisement_raw_obj },
+    { MP_OBJ_NEW_QSTR(MP_QSTR_set_address),             (mp_obj_t)&bt_set_address_obj },
     { MP_OBJ_NEW_QSTR(MP_QSTR_set_pin),                 (mp_obj_t)&bt_set_pin_obj },
     { MP_OBJ_NEW_QSTR(MP_QSTR_advertise),               (mp_obj_t)&bt_advertise_obj },
     { MP_OBJ_NEW_QSTR(MP_QSTR_service),                 (mp_obj_t)&bt_service_obj },
