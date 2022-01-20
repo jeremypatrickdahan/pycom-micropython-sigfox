@@ -1712,11 +1712,11 @@ STATIC MP_DEFINE_CONST_FUN_OBJ_KW(bt_set_advertisement_obj, 1, bt_set_advertisem
 STATIC mp_obj_t bt_set_advertisement_raw(mp_obj_t self_in, mp_obj_t raw_data) {
     mp_buffer_info_t bufinfo;
     uint32_t data_len;
-    uint8_t  data[30] = {0};
+    uint8_t  data[31] = {0};
 
     if (raw_data != mp_const_none) {
         mp_get_buffer_raise(raw_data, &bufinfo, MP_BUFFER_READ);
-        if (bufinfo.len < 31) {
+        if (bufinfo.len <= 31) {
             memcpy(data, (uint8_t *)bufinfo.buf, bufinfo.len);
             data_len = bufinfo.len;
         } else {
@@ -1727,8 +1727,8 @@ STATIC mp_obj_t bt_set_advertisement_raw(mp_obj_t self_in, mp_obj_t raw_data) {
         esp_ble_gap_config_adv_data_raw(data, data_len);
 
         // wait for the advertisement data to be configured
-        bt_gatts_event_result_t gatts_event;
-        xQueueReceive(xGattsQueue, &gatts_event, portMAX_DELAY);
+//        bt_gatts_event_result_t gatts_event;
+//        xQueueReceive(xGattsQueue, &gatts_event, portMAX_DELAY);
     }
 
     return mp_const_none;
